@@ -15,13 +15,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": ">=7.0",
-    "ext-iconv": "*",
-    "ext-mbstring": "*",
-    "ext-zip": "*",
-    "ext-openssl": "*",
-    "ext-posix": "*",
-    "ext-pcntl": "*"
+    "php": ">=7.0"
   },
   "autoload": {
     "psr-4": {

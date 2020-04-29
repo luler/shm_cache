@@ -16,6 +16,7 @@ class ShmCache
      * @param int $expire //超时时间
      * @return false|int
      * @author LinZhou <1207032539@qq.com>
+     * @throws \Exception
      */
     public static function set(string $name, $value, int $expire = 0)
     {
@@ -38,10 +39,12 @@ class ShmCache
         $file_path = self::$shm_root_path . self::$app_name;
         if (!file_exists($file_path)) {
             mkdir($file_path, 0777, true);
+            chmod($file_path, 0777);
         }
         $file_path .= '/' . $name;
         $data = serialize($data);
         file_put_contents($file_path, $data);
+        chmod($file_path, 0777);
         return true;
     }
 
@@ -51,6 +54,7 @@ class ShmCache
      * @param bool $default
      * @return bool
      * @author LinZhou <1207032539@qq.com>
+     * @throws \Exception
      */
     public static function get(string $name, $default = false)
     {
@@ -82,6 +86,7 @@ class ShmCache
      * 判断缓存键名是否存在
      * @param $name
      * @return bool
+     * @throws \Exception
      * @author LinZhou <1207032539@qq.com>
      */
     public static function has($name)
@@ -100,6 +105,31 @@ class ShmCache
             return false;
         }
         return true;
+    }
+
+    /**
+     * 删除缓存
+     * @param $name
+     * @return bool
+     * @throws \Exception
+     * @author LinZhou <1207032539@qq.com>
+     */
+    public static function rm($name)
+    {
+        if (!preg_match('/^\w+$/', $name, $matchs)) {
+            throw new \Exception('键名设置不规范,仅支持字母、数字、下划线');
+        }
+        if (empty(self::$app_name)) {
+            throw new \Exception('请设置应用缓存标志');
+        }
+        if ($name !== self::$timeout_check_setting_key) {
+            self::delExpiredKey();
+        }
+        $file_path = self::$shm_root_path . self::$app_name . '/' . $name;
+        if (!file_exists($file_path)) {
+            return false;
+        }
+        return unlink($file_path);
     }
 
     /**
@@ -154,29 +184,5 @@ class ShmCache
             }
             self::set(self::$timeout_check_setting_key, time() + self::$timeout_check_setting_interval);
         }
-    }
-
-    /**
-     * 删除缓存
-     * @param $name
-     * @return bool
-     * @author LinZhou <1207032539@qq.com>
-     */
-    public static function rm($name)
-    {
-        if (!preg_match('/^\w+$/', $name, $matchs)) {
-            throw new \Exception('键名设置不规范,仅支持字母、数字、下划线');
-        }
-        if (empty(self::$app_name)) {
-            throw new \Exception('请设置应用缓存标志');
-        }
-        if ($name !== self::$timeout_check_setting_key) {
-            self::delExpiredKey();
-        }
-        $file_path = self::$shm_root_path . self::$app_name . '/' . $name;
-        if (!file_exists($file_path)) {
-            return false;
-        }
-        return unlink($file_path);
     }
 }
