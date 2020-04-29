@@ -1,0 +1,39 @@
+{
+  "name": "luler/shm_cache",
+  "description": "使用Linux的shm来做缓存",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/luler/shm_cache",
+  "authors": [
+    {
+      "name": "luler",
+      "email": "1207032539@qq.com",
+      "homepage": "https://github.com/luler",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.0",
+    "ext-iconv": "*",
+    "ext-mbstring": "*",
+    "ext-zip": "*",
+    "ext-openssl": "*",
+    "ext-posix": "*",
+    "ext-pcntl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Luler\\ShmCache\\": "src/ShmCache"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Test\\": "tests"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5"
+  }
+}
