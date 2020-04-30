@@ -39,12 +39,12 @@ class ShmCache
         $file_path = self::$shm_root_path . self::$app_name;
         if (!file_exists($file_path)) {
             mkdir($file_path, 0777, true);
-            chmod($file_path, 0777);
+            @chmod($file_path, 0777);
         }
         $file_path .= '/' . $name;
         $data = serialize($data);
         file_put_contents($file_path, $data);
-        chmod($file_path, 0777);
+        @chmod($file_path, 0777);
         return true;
     }
 
